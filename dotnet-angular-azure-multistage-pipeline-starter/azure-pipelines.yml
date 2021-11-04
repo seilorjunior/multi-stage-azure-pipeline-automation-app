@@ -1,0 +1,117 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+variables:
+  azureSubscriptionId: 'replace-with-subscription-id'
+  azureRMConnectionName: 'replace-with-azure-rm-connection-name'
+stages:
+  - stage: Build
+    displayName: Build dotnet6-angular app and publish artifacts
+    jobs:
+      - job: Build_dotnet6_angular_app
+        displayName: Build dotnet6-angular app	
+        steps:
+        - task: UseDotNet@2
+          displayName: 'set dotnet version'
+          inputs:
+            version: '6.0.x'
+            includePreviewVersions: true # Required for preview versions
+          
+        - task: DotNetCoreCLI@2
+          displayName: 'dotnet build'
+          inputs:
+            command: 'build'
+            configuration: $(buildConfiguration)
+
+        - task: DotNetCoreCLI@2
+          displayName: 'dotnet publish app'
+          inputs:
+            command: publish
+            publishWebProjects: True
+            arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+            zipAfterPublish: True
+
+        - task: PublishPipelineArtifact@1
+          displayName: 'dotnet publish app to artefact folder'
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)' 
+            artifactName: 'dotnetangularapp'
+  - stage: Staging
+    displayName: Deploy to Staging
+    dependsOn: Build
+    jobs:
+      - deployment: DeployARMAndWebApp
+        displayName: Deploy infrastructure and web app
+        environment: staging
+        strategy:
+          runOnce:
+            preDeploy:
+              steps:
+              - download: current
+                artifact: dotnetangularapp
+                displayName: Download dotnet6-angular artifact
+            deploy:
+             steps:
+             - task: AzureResourceManagerTemplateDeployment@3
+               displayName: Deploy ARM template
+               inputs:
+                deploymentScope: 'Resource Group'
+                azureResourceManagerConnection: $(azureRMConnectionName)
+                subscriptionId: $(azureSubscriptionId)
+                action: 'Create Or Update Resource Group'
+                resourceGroupName: 'dev-csmazdevops'
+                location: 'West Europe'
+                templateLocation: 'Linked artifact'
+                csmFile: '$(Pipeline.Workspace)/dotnetangularapp/deployment/azuredeploy.json'
+                csmParametersFile: '$(Pipeline.Workspace)/dotnetangularapp/deployment/azuredeploy.parameters.staging.json'
+                deploymentMode: 'Incremental'
+             - task: AzureRmWebAppDeployment@4
+               inputs:
+                 ConnectionType: 'AzureRM'
+                 azureSubscription:  $(azureRMConnectionName)
+                 appType: 'webApp'
+                 WebAppName: 'csmdevopsstagingsite'
+                 packageForLinux: '$(Pipeline.Workspace)/dotnetangularapp/*.zip'
+  - stage: Production
+    displayName: Deploy to Production
+    dependsOn: Staging
+    jobs:
+      - deployment: DeployARMAndWebApp
+        displayName: Deploy infrastructure and web app
+        environment: production
+        strategy:
+          runOnce:
+            preDeploy:
+              steps:
+              - download: current
+                artifact: dotnetangularapp
+                displayName: Download dotnet6-angular artifact
+            deploy:
+             steps:
+             - task: AzureResourceManagerTemplateDeployment@3
+               displayName: Deploy ARM template
+               inputs:
+                deploymentScope: 'Resource Group'
+                azureResourceManagerConnection:  $(azureRMConnectionName)
+                subscriptionId: $(azureSubscriptionId)
+                action: 'Create Or Update Resource Group'
+                resourceGroupName: 'prd-csmazdevops'
+                location: 'West Europe'
+                templateLocation: 'Linked artifact'
+                csmFile: '$(Pipeline.Workspace)/dotnetangularapp/deployment/azuredeploy.json'
+                csmParametersFile: '$(Pipeline.Workspace)/dotnetangularapp/deployment/azuredeploy.parameters.prod.json'
+                deploymentMode: 'Incremental'
+             - task: AzureRmWebAppDeployment@4
+               inputs:
+                 ConnectionType: 'AzureRM'
+                 azureSubscription:  $(azureRMConnectionName)
+                 appType: 'webApp'
+                 WebAppName: 'csmdevopsprodsite'
+                 packageForLinux: '$(Pipeline.Workspace)/dotnetangularapp/*.zip'

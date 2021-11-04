@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-angular-azure-multistage-pipeline-starter", "dotnet-angular-azure-multistage-pipeline-starter\dotnet-angular-azure-multistage-pipeline-starter.csproj", "{CC828553-1B59-4780-BA2C-8716C09704F7}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "deployment", "deployment\deployment.deployproj", "{AC4590FE-B205-44A2-A192-5D2EC2D227FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92007B80-1C68-4108-9E46-3AA287EB9901}"
+	ProjectSection(SolutionItems) = preProject
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		LICENSE = LICENSE
+		README.md = README.md
+		SECURITY.md = SECURITY.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC828553-1B59-4780-BA2C-8716C09704F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC828553-1B59-4780-BA2C-8716C09704F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC828553-1B59-4780-BA2C-8716C09704F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC828553-1B59-4780-BA2C-8716C09704F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC4590FE-B205-44A2-A192-5D2EC2D227FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC4590FE-B205-44A2-A192-5D2EC2D227FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC4590FE-B205-44A2-A192-5D2EC2D227FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC4590FE-B205-44A2-A192-5D2EC2D227FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A089F1DA-77A7-4DF9-8927-7306FFE4F27D}
+	EndGlobalSection
+EndGlobal
