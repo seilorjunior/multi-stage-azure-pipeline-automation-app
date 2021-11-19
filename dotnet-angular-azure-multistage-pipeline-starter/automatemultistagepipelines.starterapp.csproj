@@ -7,12 +7,12 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <SpaProxyServerUrl>https://localhost:44446</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
-    <RootNamespace>dotnet_angular_azure_multistage_pipeline_starter</RootNamespace>
+    <RootNamespace>AutomateMultiStagePipelines.StarterApp</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.0-rc.2.21480.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
